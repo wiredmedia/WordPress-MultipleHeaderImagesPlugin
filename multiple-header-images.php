@@ -12,8 +12,6 @@ Version: 1.0
 Author URI: http://wiredmedia.co.uk
 */
 
-/* TODO: make it independent of wiredpress ( ajax url thing )
-
 /* add meta boxes for selecting multiple header images
 /*-----------------------------------------------------------------------------------*/
 Class Multiple_Header_Images{
