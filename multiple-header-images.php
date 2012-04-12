@@ -17,13 +17,13 @@ Author URI: http://wiredmedia.co.uk
 /* add meta boxes for selecting multiple header images
 /*-----------------------------------------------------------------------------------*/
 Class Multiple_Header_Images{
-  
-  public function __construct() { 
-    add_action( 'add_meta_boxes', array( &$this, 'add_meta_box' ) ); // add the meta box    
+
+  public function __construct() {
+    add_action( 'add_meta_boxes', array( &$this, 'add_meta_box' ) ); // add the meta box
     add_action( 'admin_enqueue_scripts', array(&$this, 'the_javascript') ); // register js
     add_action( 'admin_enqueue_scripts', array(&$this, 'the_css') );
   }
-  
+
   /* meta box register */
   public function add_meta_box(){
     $types = array( 'post', 'page', 'offer_page', 'room_page', 'menu' );
@@ -38,7 +38,7 @@ Class Multiple_Header_Images{
       );
     }
   }// END: add_meta_box()
-  
+
   /* meta box renderer */
   public function render_meta_box_content(){ ?>
     <?php
@@ -46,41 +46,45 @@ Class Multiple_Header_Images{
     ?>
     <div id="multiple_header_images_container" style="display:none">
       <div id="multiple-header-images" data-postid="<?php echo $post->ID ?>">
-        
+
         <div class="mhi-available">
           <h3 class="media-title">Available images</h3>
           <ul id="multiple-header-images-available" class="mhi-list"></ul>
         </div>
-      
+
         <div class="mhi-selected">
           <h4 class="media-title">Selected images</h4>
           <ul id="multiple-header-images-selected" class="mhi-list"></ul>
         </div>
-        
+
         <div class="mhi-actions">
           <a href="#" id="mhi-save-images">Update<span class="feedback"></span></a>
         </div>
-      
+
       </div><!-- #multiple-header-images -->
     </div>
     <a id="multiple-header-btn" class="thickbox" title="Select header images" href="#TB_inline?height=482&width=640&inlineId=multiple_header_images_container">Select header images</a>
     <?php
   }
-  
+
   /* ajax response for header images */
   public function get_header_images( $data ){
     global $wpdb;
     $post_id = intval( $_POST['postid'] );
+
     $available_imgs = get_uploaded_header_images();
-    $selected_imgs = get_post_meta( $post_id, 'multiple-header-images', true );
+    $selected_imgs = json_decode(get_post_meta( $post_id, 'multiple-header-images', true));
+
     $collection = array();
     $collection['selected'] = array();
     $collection['available'] = array();
-    
+
     if( is_array($available_imgs) ){
       foreach( $available_imgs as $header => $attrs ):
+        $attrs['url'] = str_replace(get_bloginfo('url'), '', $attrs['url']);
+
         if( is_array($selected_imgs) ){
-          if( !in_array($attrs['url'], $selected_imgs ) ){
+          if( !in_array($attrs['url'], $selected_imgs ) ) {
             // not in selected images
             $collection_type = 'available';
             $checked = '';
@@ -93,34 +97,36 @@ Class Multiple_Header_Images{
           //currently no selected images
           $collection_type = 'available';
           $checked = '';
-        }        
+        }
         $collection[$collection_type][] = '<li class="mhi-image"><img src="'. $attrs['url'] .'" width="100" /><input type="checkbox" class="mhi-checkbox" value="'. $attrs['url']  .'" name="header-image" '. $checked .'/></li>';
       endforeach;
-    }  
-    
+    }
+
     echo json_encode( $collection );
     exit;
   }
-  
+
   /* save images to db */
   public function save_images( $data ){
     global $wpdb;
     $post_id = intval( $_POST['postid'] );
     $images = ( isset($_POST['images']) ) ? $_POST['images'] : null;
+
     if( $images ){
-      update_post_meta($post_id, 'multiple-header-images', $images);
-    }else{
+      update_post_meta($post_id, 'multiple-header-images', json_encode($images));
+    } else {
       delete_post_meta($post_id, 'multiple-header-images');
     }
+
     exit;
   }
-  
+
   /* load js in footer */
   public function the_javascript(){
     wp_register_script( 'multiple-header-images', WP_PLUGIN_URL . '/multiple-header-images/functions.js', array('jquery'), '', true );
     wp_enqueue_script( 'multiple-header-images' );
   }
-  
+
   /* load the styles */
   public function the_css(){
     $myStyleUrl = plugins_url('styles.css', __FILE__); // Respects SSL, Style.css is relative to the current file
@@ -130,7 +136,7 @@ Class Multiple_Header_Images{
       wp_enqueue_style( 'multiple-header-images');
     }
   }
-  
+
   /**
 	 * Check if post has header images attached.
 	 *
@@ -138,7 +144,7 @@ Class Multiple_Header_Images{
 	 * @return bool Whether post has an image attached.
 	 */
 	public static function has_header_images($post_id = null) {
-		
+
 		$post_id = (null === $post_id) ? get_the_ID() : $post_id;
 
 		if (!$post_id) {
@@ -147,7 +153,7 @@ Class Multiple_Header_Images{
 
 		return self::get_the_header_images_meta( $post_id );
 	}
-  
+
   /**
 	 * Display Header Images.
 	 *
@@ -161,7 +167,7 @@ Class Multiple_Header_Images{
 	  }
 	  echo $html;
 	}
-  
+
   public function default_header_image(){
     return array( get_header_image() );
   }
@@ -177,21 +183,16 @@ Class Multiple_Header_Images{
       $post_id = (null === $post_id) ? get_the_ID() : $post_id;
       $header_images = self::get_the_header_images_meta( $post_id );
     }
-    
+
     // if no header images attached to this post get the default header image
     if( empty($header_images) ){
       $header_images = self::default_header_image();
     }
-    
+
     $filtered_images = array();
     $html = '';
+
     foreach( $header_images as $url ){
-      if ( is_ssl() ){
-        $url = str_replace( 'http://', 'https://', $url );
-    	}else{
-    	  $url = str_replace( 'https://', 'http://', $url );
-      }
-      
       // if size is specified return the specific size
       if( $size ){
         $path_parts = pathinfo( $url );
@@ -210,22 +211,46 @@ Class Multiple_Header_Images{
         }
         */
       }
-      
+
     	array_push($filtered_images, esc_url_raw( $url ) );
     }
 		return $filtered_images;
   }
-  
+
   /**
 	 * Retrieve Header Images meta.
 	 *
 	 * @param string $post_id. Post ID.
 	 */
   private function get_the_header_images_meta( $post_id ){
-    return get_post_meta( $post_id, 'multiple-header-images', true  );
+    return json_decode(get_post_meta( $post_id, 'multiple-header-images', true));
   }
-    
-}// END: Multiple_Header_Images
+
+} // END: Multiple_Header_Images
+
+function get_header_images() {
+  return Multiple_Header_Images::get_the_header_images();
+}
+add_action( 'load-new-post.php', 'get_header_images' );
+add_action( 'load-post.php', 'get_header_images' );
+
+function header_images($options = array()) {
+  echo '<ul';
+
+  if (array_key_exists('class', $options)) {
+    echo sprintf(' class="%s"', $options['class']);
+  }
+
+  echo '>';
+
+  foreach (get_header_images() as $image) {
+    echo '<li><img src="',$image,'" /></li>';
+  }
+
+  echo '</ul>';
+}
+add_action( 'load-new-post.php', 'header_images' );
+add_action( 'load-post.php', 'header_images' );
 
 function multiple_header_images(){
   return new Multiple_Header_Images;
