@@ -1,15 +1,14 @@
 <?php
 /**
  * @package Multiple Header Images
- * @version 1.0
+ * @version 0.1
  */
 /*
 Plugin Name: Multiple Header Images
-Plugin URI: http://wordpress.org/extend/plugins/
-Description: Allows user to select multiple header images to associate with a post
-Author: Wiredmedia (Carl Hughes)
-Version: 1.0
-Author URI: http://wiredmedia.co.uk
+Description: Allows user to select multiple header images to associate with a post.
+Author: Wired Media
+Version: 0.1
+Author URI: http://www.wiredmedia.co.uk
 */
 
 /* add meta boxes for selecting multiple header images
