@@ -229,8 +229,6 @@ Class Multiple_Header_Images{
 function get_header_images() {
   return Multiple_Header_Images::get_the_header_images();
 }
-add_action( 'load-new-post.php', 'get_header_images' );
-add_action( 'load-post.php', 'get_header_images' );
 
 function header_images($options = array()) {
   echo '<ul';
@@ -247,13 +245,12 @@ function header_images($options = array()) {
 
   echo '</ul>';
 }
-add_action( 'load-new-post.php', 'header_images' );
-add_action( 'load-post.php', 'header_images' );
 
 function multiple_header_images(){
   return new Multiple_Header_Images;
 }
 add_action( 'load-post.php', 'multiple_header_images' );
+add_action( 'load-post-new.php', 'multiple_header_images' );
 
 function multiple_header_images_list($data){
   return Multiple_Header_Images::get_header_images($data);
