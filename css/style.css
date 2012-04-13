@@ -1,0 +1,26 @@
+.mhi-selected, .mhi-available {
+  display:block;
+  overflow:auto;
+}
+
+.mhi-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mhi-list li, .mhi-list li img {
+  display: block;
+  display: block;
+  width: 230px;
+  cursor:pointer;
+}
+
+.mhi-list a {
+  display: block;
+  width: 100px;
+  height: 100px;
+}
+.mhi-available{ margin:0 0 20px 0; }
+.mhi-checkbox{ display:none; }
+.mhi-actions{ margin:20px 0 0 0; }

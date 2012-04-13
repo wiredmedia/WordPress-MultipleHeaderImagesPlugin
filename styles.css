@@ -1,8 +1,0 @@
-.mhi-list ul{ list-style:none; margin:0; padding:0; }
-.mhi-list li{ display:inline; float:left; margin:0 10px 0 0; cursor:pointer; }
-.mhi-list a{ display:block; width:100px; height:100px; }
-.mhi-selected,
-.mhi-available{ display:block; overflow:auto; }
-.mhi-available{ margin:0 0 20px 0; }
-.mhi-checkbox{ display:none; }
-.mhi-actions{ margin:20px 0 0 0; }
