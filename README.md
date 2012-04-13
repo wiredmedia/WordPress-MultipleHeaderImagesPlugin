@@ -8,8 +8,9 @@ Add header_images() to your template (header.php?) to output a simple unordered 
 
  - post_id: the id of the post, default is current post
  - class: the class name to apply to your unordered list
- - width
- - height
+ - size: passed through to thumbnailer (untested)
+ - width: html
+ - height: html
 
 ## Disclaimer
 
