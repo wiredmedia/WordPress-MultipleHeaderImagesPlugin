@@ -74,9 +74,6 @@ var multipleHeaderImages = function() {
 
           el.selected.append(item);
         });
-
-        // now remove binded click event, this stops this event being fired again if user closes modal and opens it again without a page refresh
-        el.launchbtn.unbind('click');
       },
       'json'
     );
