@@ -26,7 +26,15 @@ class Plugin {
     if (is_404()) {
       $images = self::get_default_header_images();
     } else {
-      $images = self::get_header_images_post_meta($post_id ? $post_id : get_the_ID());
+      if (!$post_id) {
+        $post_id = get_the_ID();
+      }
+
+      $post_ids = array_merge(array($post_id), get_post_ancestors($post_id));
+
+      while (!$images && $post_ids) {
+        $images = self::get_header_images_post_meta(array_shift($post_ids));
+      }
     }
 
     // if no header images attached to this post get the default header images
