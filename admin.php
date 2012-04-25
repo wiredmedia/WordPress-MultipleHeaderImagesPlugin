@@ -89,9 +89,9 @@ class Admin {
     $available_imgs = get_uploaded_header_images();
 
     if (isset($_POST['post_id']) && is_numeric($_POST['post_id'])) {
-      $selected_imgs = json_decode(get_post_meta($_POST['post_id'], 'multiple-header-images', true));
+      $selected_imgs = json_decode(get_post_meta($_POST['post_id'], '_header_images', true));
     } else {
-      $selected_imgs = json_decode(get_option('default-header-images'));
+      $selected_imgs = json_decode(get_option('default_header_images'));
     }
 
     $available = array();
@@ -127,16 +127,16 @@ class Admin {
     if (isset($_POST['post_id']) && is_numeric($_POST['post_id'])) {
       // per-post
       if ($images) {
-        update_post_meta($_POST['post_id'], 'multiple-header-images', json_encode($images));
+        update_post_meta($_POST['post_id'], '_header_images', json_encode($images));
       } else {
-        delete_post_meta($_POST['post_id'], 'multiple-header-images');
+        delete_post_meta($_POST['post_id'], '_header_images');
       }
     } else {
       // default
       if ($images) {
-        update_option('default-header-images', json_encode($images));
+        update_option('default_header_images', json_encode($images));
       } else {
-        delete_option('default-header-images');
+        delete_option('default_header_images');
       }
 
     }

@@ -68,7 +68,7 @@ class Plugin {
   }
 
   public function get_default_header_images() {
-    $images = json_decode(get_option('default-header-images'));
+    $images = json_decode(get_option('default_header_images'));
 
     return $images ? $images : array(get_header_image()); // load default images or fallback to regular header image
   }
@@ -91,6 +91,6 @@ class Plugin {
 	 * @param string $post_id. Post ID.
 	 */
   private function get_header_images_post_meta($post_id) {
-    return json_decode(get_post_meta($post_id, 'multiple-header-images', true));
+    return json_decode(get_post_meta($post_id, '_header_images', true));
   }
 }
