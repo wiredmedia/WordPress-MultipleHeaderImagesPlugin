@@ -31,6 +31,7 @@ class Plugin {
       }
 
       $post_ids = array_merge(array($post_id), get_post_ancestors($post_id));
+      $images = false;
 
       while (!$images && $post_ids) {
         $images = self::get_header_images_post_meta(array_shift($post_ids));
