@@ -20,7 +20,7 @@ class Admin {
 
   /* meta box register */
   public function add_meta_box() {
-    $types = array( 'post', 'page', 'offer_page', 'room_page', 'menu' );
+    $types = apply_filters( 'multiple_header_images_post_types', array( 'post', 'page' ) );
     foreach($types as $type) {
       add_meta_box(
         'header_images'
