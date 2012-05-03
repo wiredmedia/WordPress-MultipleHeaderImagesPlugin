@@ -54,10 +54,10 @@ class Admin {
 
   public function form() {
     global $post;
-
+    $post_id = (isset($post->ID)) ? $post->ID : '' ;
     echo '
       <div id="multiple_header_images_container">
-        <div id="multiple-header-images"',$post ? ' data-post-id="'.$post->ID.'"' : '','>
+        <div id="multiple-header-images" data-post-id="'.$post_id.'">
 
           <div class="mhi-selected">
             <h4 class="media-title">Selected images</h3>
