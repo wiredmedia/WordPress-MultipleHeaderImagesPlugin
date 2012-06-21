@@ -12,20 +12,29 @@ namespace MultipleHeaderImages;
 require_once dirname(__FILE__) . '/admin.php';
 require_once dirname(__FILE__) . '/api.php';
 
+
 /* add meta boxes for selecting multiple header images
 /*-----------------------------------------------------------------------------------*/
 class Plugin {
 
   public function __construct() {
-
-    register_activation_hook( __FILE__, array(&$this, 'install') );
-
+    add_action( 'admin_init', array(&$this, 'requires_wordpress_version'));
   }
 
-  public function install(){
-    $wp_version = get_bloginfo('version');
-    if ( version_compare( $wp_version, '3.4', '<') ){
-      // this plugin does not support version older then 3.4
+  public function old_version_notice(){
+    $plugin_data = get_plugin_data( __FILE__, false );
+    echo '<div class="error">
+      <p>Sorry <strong>'. $plugin_data['Name'] .'</strong> requires WordPress 3.4 or higher! please upgrade to the latest version of WordPress. The plugin was not activated.</p>
+    </div>';
+  }
+
+  function requires_wordpress_version() {
+    $plugin = plugin_basename( __FILE__ );
+    if ( version_compare(get_bloginfo('version'), "3.4", "<" ) ) {
+      if( is_plugin_active($plugin) ) {
+        deactivate_plugins( $plugin );
+        add_action('admin_notices', array(&$this, 'old_version_notice'));
+      }
     }
   }
 
