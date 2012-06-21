@@ -39,21 +39,3 @@ function header_images($options = array()) {
 function get_header_images($post_id = null, $size = null) {
   return Plugin::get_header_images($post_id, $size);
 }
-
-/* bind admin ajax functions */
-
-function multiple_header_images() {
-  return new Plugin;
-}
-add_action('load-post.php', 'multiple_header_images' );
-add_action('load-post-new.php', 'multiple_header_images' );
-
-function multiple_header_images_list($data) {
-  return Admin::ajax_get($data);
-}
-add_action('wp_ajax_list_header_images', 'multiple_header_images_list');
-
-function multiple_header_images_save($data) {
-  return Admin::ajax_save($data);
-}
-add_action('wp_ajax_save_header_images', 'multiple_header_images_save');

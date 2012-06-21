@@ -8,10 +8,14 @@ class Admin {
 
   public function __construct() {
     add_action('admin_menu', array(&$this, 'init'));
-
     add_action('add_meta_boxes', array(&$this, 'add_meta_box')); // add the meta box
     add_action('admin_enqueue_scripts', array(&$this, 'the_javascript')); // register js
     add_action('admin_enqueue_scripts', array(&$this, 'the_css'));
+
+    /* bind admin ajax functions */
+    add_action('wp_ajax_list_header_images', array(&$this, 'ajax_get'));
+    add_action('wp_ajax_save_header_images', array(&$this, 'ajax_save'));
+
   }
 
   public function init() {
@@ -39,7 +43,7 @@ class Admin {
         <div id="icon-themes" class="icon32"><br></div>
         <h2>',$this->page_title,'</h2>
 
-        <p>Specify default header images to fallback to if not defined per-post.</p>
+        <p>Specify multiple default header images to fallback to if not defined per-post.</p>
 
         <p>Should none be selected here, we\'ll fallback to the regular header image.</p>
 
