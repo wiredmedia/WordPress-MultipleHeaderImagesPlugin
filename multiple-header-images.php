@@ -18,25 +18,39 @@ require_once dirname(__FILE__) . '/api.php';
 class Plugin {
 
   public function __construct() {
-    add_action( 'admin_init', array(&$this, 'requires_wordpress_version'));
+    add_action( 'admin_init', array(&$this, 'check_wp_version'));
+    add_action( 'admin_init', array(&$this, 'check_php_version'));
   }
 
-  public function old_version_notice(){
-    $plugin_data = get_plugin_data( __FILE__, false );
-    echo '<div class="error">
-      <p>Sorry <strong>'. $plugin_data['Name'] .'</strong> requires WordPress 3.4 or higher! please upgrade to the latest version of WordPress. The plugin was not activated.</p>
-    </div>';
-  }
-
-  function requires_wordpress_version() {
-    $plugin = plugin_basename( __FILE__ );
+  public function check_wp_version() {
     if ( version_compare(get_bloginfo('version'), "3.4", "<" ) ) {
+      $plugin = plugin_basename( __FILE__ );
       if( is_plugin_active($plugin) ) {
-        deactivate_plugins( $plugin );
-        add_action('admin_notices', array(&$this, 'old_version_notice'));
+        deactivate_plugins($plugin);
+        add_action('admin_notices', function(){
+          $plugin_data = get_plugin_data( __FILE__, false );
+          echo '<div class="error">
+            <p>Sorry <strong>'. $plugin_data['Name'] .'</strong> requires WordPress 3.4 or higher! please upgrade to the latest version of WordPress. The plugin was not activated.</p>
+          </div>';
+        });
       }
     }
-  }
+  } // END: check_wp_version()
+
+  public function check_php_version(){
+    if( version_compare(PHP_VERSION, '5.3', '<') ) {
+      $plugin = plugin_basename( __FILE__ );
+      if( is_plugin_active($plugin) ) {
+        deactivate_plugins($plugin);
+        add_action('admin_notices', function(){
+          $plugin_data = get_plugin_data( __FILE__, false );
+          echo '<div class="error">
+            <p>Sorry <strong>'. $plugin_data['Name'] .'</strong> requires PHP 5.2 or higher! your PHP version is '. PHP_VERSION .'. The plugin was not activated.</p>
+          </div>';
+        });
+      }
+    }
+  } // END: check_php_version()
 
   /**
 	 * Retrieve Header Images.
