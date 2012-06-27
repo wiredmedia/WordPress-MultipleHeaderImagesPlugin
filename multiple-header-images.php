@@ -3,7 +3,7 @@
 Plugin Name: Multiple Header Images
 Description: Allows user to select multiple header images to associate with a post.
 Author: Wired Media
-Version: 0.1
+Version: 0.2
 Author URI: http://www.wiredmedia.co.uk
 */
 
@@ -11,15 +11,23 @@ namespace MultipleHeaderImages;
 
 require_once dirname(__FILE__) . '/admin.php';
 require_once dirname(__FILE__) . '/api.php';
+require_once dirname(__FILE__) . '/upgrade.php';
 
 
 /* add meta boxes for selecting multiple header images
 /*-----------------------------------------------------------------------------------*/
 class Plugin {
 
+  var $plugin_version = '0.2';
+
   public function __construct() {
     add_action( 'admin_init', array(&$this, 'check_wp_version'));
     add_action( 'admin_init', array(&$this, 'check_php_version'));
+    add_action( 'admin_init', array(&$this, 'upgrade_plugin'));
+  }
+
+  public function upgrade_plugin(){
+    new Upgrade($this->plugin_version);
   }
 
   public function check_wp_version() {

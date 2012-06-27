@@ -3,6 +3,7 @@
 namespace MultipleHeaderImages;
 
 class Admin {
+
   public $page_title = 'Custom Multiple Header Images';
   public $menu_title = 'Headers';
 
