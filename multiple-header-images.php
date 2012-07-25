@@ -69,8 +69,7 @@ class Plugin {
 
   public function get_default_header_images() {
     $images = json_decode(get_option('default_header_images'));
-
-    return $images ? $images : array(get_header_image()); // load default images or fallback to regular header image
+    return $images ? $images : array( str_replace(get_bloginfo('url'), '',get_header_image()) ); // load default images or fallback to regular header image
   }
 
   /**
