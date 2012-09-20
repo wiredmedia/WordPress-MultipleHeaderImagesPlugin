@@ -9,12 +9,38 @@ Author URI: http://www.wiredmedia.co.uk
 
 namespace MultipleHeaderImages;
 
+class Base {
+  /*
+   * because i like to allow for the plugin to be outside of the plugins directory and symlinked in i have to
+   * avoid the use of the __FILE__ variable as recommended in the WordPress docs.
+   * If the plugin is symlinked into the plugins directory __FILE__ will not work as needed, it will return the actuall path
+   * to the plugin rather then the symlinked path
+   */
+  var $plugin_folder = 'multiple-header-images';
+
+  public function plugin_folder(){
+    return $this->$plugin_folder;
+  }
+
+  public function plugin_dir(){
+    return WP_PLUGIN_DIR . '/' . $this->plugin_folder;
+  }
+
+  public function plugin_file(){
+    return WP_PLUGIN_DIR . '/' . $this->plugin_folder . '/multiple-header-images.php';
+  }
+
+  public function plugin_url(){
+    return WP_PLUGIN_URL . '/' . $this->plugin_folder;
+  }
+
+}
+
 require_once dirname(__FILE__) . '/admin.php';
 require_once dirname(__FILE__) . '/functions.php';
 
-/* add meta boxes for selecting multiple header images
-/*-----------------------------------------------------------------------------------*/
-class Plugin {
+
+class Plugin extends Base {
   public function __construct() {}
 
   /**
