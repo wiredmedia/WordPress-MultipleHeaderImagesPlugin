@@ -1,119 +1,125 @@
-jQuery(document).ready(function (){
-  multipleHeaderImages.init();
-});
+/*
+ * module:
+ * description:
+ ---------------------------------------- */
+var MULTIPLEHEADERIMAGES = (function (module) {
 
-var multipleHeaderImages = function() {
-  var el = {};
-  var post_id = null;
-  var ajaxurl = window.ajaxurl; // printed out by default by wp in admin area
+    module.facetedFilters = function(){
 
-  var init = function() {
-    el.container = jQuery('#multiple-header-images');
-    el.available = jQuery('#multiple-header-images-available');
-    el.selected = jQuery('#multiple-header-images-selected');
-    el.savebtn = jQuery('#mhi-save-images');
-    el.feedback = el.savebtn.children('span');
-    post_id = el.container.attr('data-post-id');
+        var el = {};
+        var post_id = null;
+        var ajaxurl = window.ajaxurl; // printed out by default by wp in admin area
 
-    loadImages();
+        jQuery(document).ready(function (){ init(); });
 
-    el.container.delegate('.mhi-image', 'click', function() {
-      toggleCheckbox(jQuery(this));
-    });
+        function init(){
+            el.container = jQuery('#multiple-header-images');
+            el.available = jQuery('#multiple-header-images-available');
+            el.selected = jQuery('#multiple-header-images-selected');
+            el.savebtn = jQuery('#mhi-save-images');
+            el.feedback = el.savebtn.children('span');
+            post_id = el.container.attr('data-post-id');
 
-    el.savebtn.click( function(){
-      saveImages();
-      return false;
-    });
-  };
+            loadData();
 
-  var toggleCheckbox = function( $this ){
-    var $this = $this.detach();
-    $this.toggleClass("chosen");
-    $input = $this.find('input');
+            el.container.delegate('.mhi-image', 'click', function() {
+                toggleCheckbox(jQuery(this));
+            });
 
-    if ($input.is(':checked') ){
-      $input.prop('checked', false);
-      el.available.append( $this );
-    } else {
-      $input.prop('checked', true);
-      el.selected.append( $this );
-    }
-  }
-
-  var loadImages = function(){
-    jQuery.post( ajaxurl,
-      { action:"list_header_images", 'cookie': encodeURIComponent(document.cookie), 'post_id': post_id },
-      function(response) {
-        var template = jQuery('<li/>', {'class': 'mhi-image'}).append(
-          jQuery('<img/>'),
-          jQuery('<input/>', {
-            'type': 'checkbox',
-            'class': 'mhi-checkbox',
-            'name': 'header-image'
-          })
-        );
-
-        template.apply = function(value) {
-          var item = template.clone();
-
-          item.find('img').attr('src', value);
-          item.find('input').val(value);
-
-          return item;
+            el.savebtn.click( function(){
+                saveData();
+                return false;
+            });
         }
 
-        jQuery.each(response.available, function(index, value) {
-          el.available.append(template.apply(value));
-        });
+        var toggleCheckbox = function($this){
+            var $this = $this.detach();
+            $this.toggleClass("chosen");
+            $input = $this.find('input');
 
-        jQuery.each(response.selected, function(index, value) {
-          var item = template.apply(value);
+            if($input.is(':checked')){
+                $input.prop('checked', false);
+                el.available.append( $this );
+            }else{
+                $input.prop('checked', true);
+                el.selected.append( $this );
+            }
+        }
 
-          item.find('input').prop('checked', true);
+        function loadData(){
+            jQuery.post( ajaxurl,
+                { action:"list_header_images", 'cookie': encodeURIComponent(document.cookie), 'post_id': post_id },
 
-          el.selected.append(item);
-        });
-      },
-      'json'
-    );
-  }// END: loadImages
+                function(response) {
+                    var template = jQuery('<li/>', {'class': 'mhi-image'}).append(
+                        jQuery('<img/>'),
+                        jQuery('<input/>', {
+                            'type': 'checkbox',
+                            'class': 'mhi-checkbox',
+                            'name': 'header-image'
+                        })
+                    );
 
-  var saveImages = function(){
-    el.feedback
-      .html(' - saving...')
-      .css('opacity', '1');
+                    template.apply = function(attachmentID, thumb) {
+                        var item = template.clone();
 
-    var checkedImages = [];
+                        item.find('img').attr('src', thumb);
+                        item.find('input').val(attachmentID);
 
-    // get a list of all checked images ( order dependent )
-    $selectedImages = el.container.find('.mhi-image input:checked');
+                        return item;
+                    }
 
-    $selectedImages.each(function(){
-      checkedImages.push( jQuery(this).val() );
-    });
+                    jQuery.each(response.available, function(index, value) {
+                        el.available.append(template.apply(value.attachment_id, value.thumb));
+                    });
 
-    // save a json string of hearder images to postmeta
-    jQuery.post(ajaxurl, {
-        'action': "save_header_images",
-        'cookie': encodeURIComponent(document.cookie),
-        'post_id': post_id,
-        'images': checkedImages
-      },
-      function(response) {
-        setTimeout(function(){
-          el.feedback
-          .html(' - saved')
-          .animate({
-            opacity: 0
-          }, 500);
-        }, 400);
-      },
-      'json'
-    );
-  }
+                    jQuery.each(response.selected, function(index, value) {
+                        var item = template.apply(value.attachment_id, value.thumb);
+                        item.find('input').prop('checked', true);
+                        el.selected.append(item);
+                    });
+                },
 
-  return {
-    init : init
-  };
-}();
+                'json'
+            );
+        }
+
+        function saveData(){
+            el.feedback
+                .html(' - saving...')
+                .css('opacity', '1');
+
+            var checkedImages = [];
+
+            // get a list of all checked images ( order dependent )
+            $selectedImages = el.container.find('.mhi-image input:checked');
+
+            $selectedImages.each(function(){
+                checkedImages.push( jQuery(this).val() );
+            });
+
+            // save a json string of hearder images to postmeta
+            jQuery.post(ajaxurl,{
+                'action': "save_header_images",
+                'cookie': encodeURIComponent(document.cookie),
+                'post_id': post_id,
+                'images': checkedImages
+                },
+                function(response) {
+                    setTimeout(function(){
+                        el.feedback
+                            .html(' - saved')
+                            .animate({
+                                opacity: 0
+                            }, 500);
+                    }, 400);
+                },
+                'json'
+            );
+        }
+
+    }();
+
+    return module;
+
+}(MULTIPLEHEADERIMAGES || {}));

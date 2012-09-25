@@ -91,30 +91,36 @@ class Admin {
   public function get($data) {
     global $wpdb;
 
-    $available_imgs = get_uploaded_header_images();
+    $available = get_uploaded_header_images();
 
     if (isset($_POST['post_id']) && is_numeric($_POST['post_id'])) {
-      $selected_imgs = json_decode(get_post_meta($_POST['post_id'], '_header_images', true));
+      $selected_headers = json_decode(get_post_meta($_POST['post_id'], '_header_images', true), true);
     } else {
-      $selected_imgs = json_decode(get_option('default_header_images'));
+      $selected_headers = json_decode(get_option('default_header_images'), true);
     }
 
-    $available = array();
     $selected = array();
 
-    if (is_array($available_imgs)) {
-      foreach( $available_imgs as $header => $attrs ) {
-        // strip absolute url
-        $attrs['url'] = str_replace(get_bloginfo('url'), '', $attrs['url']);
+    if (is_array($selected_headers)) {
 
-        if (!is_array($selected_imgs) || !in_array($attrs['url'], $selected_imgs)) {
-          // not in selected images
-          array_push($available, $attrs['url']);
-        } else {
-          // image is selected
-          array_push($selected, $attrs['url']);
+      /*
+       * if a header in available headers matches a seleted header take it out of the the available array
+       * also retreives the thumbnail and adds that to the data
+       */
+      foreach($available as $index => $available_header){
+
+        $thumb = wp_get_attachment_image_src($available_header['attachment_id'], 'thumbnail');
+        $available[$index]['thumb'] = $thumb[0];
+        foreach($selected_headers as $selected_header){
+          if($available_header['attachment_id'] == $selected_header){
+            // remove from available array
+            $selected[] = array('attachment_id' => $available[$index]['attachment_id'], 'thumb' => $available[$index]['thumb']);
+            unset($available_header[$index]);
+          }
         }
+
       }
+
     }
 
     return (object) array(

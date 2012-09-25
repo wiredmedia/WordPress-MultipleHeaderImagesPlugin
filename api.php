@@ -18,7 +18,7 @@ function header_images($options = array()) {
   foreach (get_header_images($post_id, $size) as $image) {
     echo '<li>';
 
-    echo '<img src="',$image,'"';
+    echo '<img src="',$image->url,'"';
 
     if ($width) {
       echo sprintf(' width="%s"', $width);
@@ -36,6 +36,6 @@ function header_images($options = array()) {
   echo '</ul>';
 }
 
-function get_header_images($post_id = null, $size = null) {
+function get_header_images($post_id = null, $size = 'full') {
   return Plugin::get_header_images($post_id, $size);
 }

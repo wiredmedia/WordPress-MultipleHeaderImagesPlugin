@@ -57,7 +57,7 @@ class Upgrade{
                 $uploaded_header_url = str_replace(get_home_url(), '', $uploaded_header['url']);
 
                 if($uploaded_header_url == $header_url){
-                    $new_headers[] = $uploaded_header;
+                    $new_headers[] = $uploaded_header['attachment_id'];
                     break;
                 }
             }
@@ -88,7 +88,7 @@ class Upgrade{
                     $uploaded_header_url = str_replace(get_home_url(), '', $uploaded_header['url']);
 
                     if($uploaded_header_url == $header_url){
-                        $new_headers[] = $uploaded_header;
+                        $new_headers[] = $uploaded_header['attachment_id'];
                         break;
                     }
                 }

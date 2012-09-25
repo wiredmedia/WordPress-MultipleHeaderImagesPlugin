@@ -63,7 +63,8 @@ class Plugin {
 	 *
 	 * @param string $post_id Optional. Post ID.
 	 */
-  public function get_header_images($post_id = null, $size = null){
+  public function get_header_images($post_id = null, $size = 'full'){
+
     if (is_404()) {
       $images = self::get_default_header_images();
     } else {
@@ -84,28 +85,13 @@ class Plugin {
       $images = self::get_default_header_images();
     }
 
-    foreach($images as $key => $url){
-      // if size is specified return the specific size
-      if ($size){
-        $url = str_replace( '.' . pathinfo($url, PATHINFO_EXTENSION), '-' . $size . '.' . pathinfo($url, PATHINFO_EXTENSION), $url );
-        /*
-         * sizes may not exist if original images are smaller then the desired image wordpress wont create that image size (won't scale up)
-         * fall back to original size
-         */
-        /*
-        $domain = $_SERVER['SERVER_NAME'];
-        $custom_size_img = str_replace( $domain, ' ', $custom_size_img );
-        echo( $custom_size_img  );
-        if( file_exists( $custom_size_img ) ){
-          $url = $custom_size_img;
-        }
-        */
-      }
+    $image_data = array();
 
-    	$images[$key] = esc_url_raw($url);
+    foreach($images as $image){
+      $image_data[] = wp_get_attachment_image_src($image, $size);
     }
 
-		return $images;
+		return $image_data;
   }
 
   public function get_default_header_images() {
