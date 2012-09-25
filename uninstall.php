@@ -6,7 +6,7 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ){
 
 // delete option
 delete_option('default_header_images');
-delete_option('wm_multiple_headers')
+delete_option('wm_multiple_headers_ver');
 
 /*
  * delete individual post meta
