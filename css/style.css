@@ -9,11 +9,11 @@
   padding: 0;
 }
 
-.mhi-list li, .mhi-list li img {
+.mhi-list li{
   display: block;
-  display: block;
-  width: 230px;
   cursor:pointer;
+  float: left;
+  margin: 0 10px 10px 0;
 }
 
 .mhi-list a {
