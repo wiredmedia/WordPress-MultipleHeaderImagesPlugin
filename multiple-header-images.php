@@ -18,16 +18,14 @@ require_once dirname(__FILE__) . '/upgrade.php';
 /*-----------------------------------------------------------------------------------*/
 class Plugin {
 
-  var $plugin_version = '0.2';
-
   public function __construct() {
     add_action( 'admin_init', array(&$this, 'check_wp_version'));
     add_action( 'admin_init', array(&$this, 'check_php_version'));
-    add_action( 'admin_init', array(&$this, 'upgrade_plugin'));
+    add_action( 'init', array(&$this, 'upgrade_plugin'));
   }
 
   public function upgrade_plugin(){
-    new Upgrade($this->plugin_version);
+    new Upgrade();
   }
 
   public function check_wp_version() {
