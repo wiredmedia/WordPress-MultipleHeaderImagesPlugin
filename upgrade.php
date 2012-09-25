@@ -10,6 +10,7 @@ class Upgrade{
     var $plugin_version = 1.5;
 
     public function __construct(){
+        delete_option('wm_multiple_headers_ver');
 
         $this->user_version = get_option('wm_multiple_headers_ver');
 
@@ -30,7 +31,7 @@ class Upgrade{
                 }
             }
 
-            update_option('wm_multiple_headers_ver', $this->user_version); // update user version
+            //update_option('wm_multiple_headers_ver', $this->user_version); // update user version
         }
 
     } // END: construct
@@ -49,20 +50,22 @@ class Upgrade{
          * populate default headers images with the new available data
          */
         $default_headers = json_decode(get_option('default_header_images'));
-        $new_default_headers = array();
+        $new_headers = array();
 
         foreach($default_headers as $header_url){
             foreach($uploaded_headers as $uploaded_header){
                 $uploaded_header_url = str_replace(get_home_url(), '', $uploaded_header['url']);
 
                 if($uploaded_header_url == $header_url){
-                    $new_default_headers[] = $uploaded_header;
+                    $new_headers[] = $uploaded_header;
                     break;
                 }
             }
         }
 
-        update_option('default_header_images', json_encode($new_default_headers));
+        if(!empty($new_headers)){
+            update_option('default_header_images', json_encode($new_headers));
+        }
 
 
         /*
@@ -78,20 +81,22 @@ class Upgrade{
         foreach($header_meta as $meta){
 
             $chosen_headers = json_decode($meta->meta_value);
-            $new_chosen_headers = array();
+            $new_headers = array();
 
             foreach($chosen_headers as $header_url){
                 foreach($uploaded_headers as $uploaded_header){
                     $uploaded_header_url = str_replace(get_home_url(), '', $uploaded_header['url']);
 
                     if($uploaded_header_url == $header_url){
-                        $new_chosen_headers[] = $uploaded_header;
+                        $new_headers[] = $uploaded_header;
                         break;
                     }
                 }
             }
 
-            update_post_meta($meta->post_id, $meta->meta_key, json_encode($new_chosen_headers));
+            if(!empty($new_headers)){
+                update_post_meta($meta->post_id, $meta->meta_key, json_encode($new_headers));
+            }
 
         }
 
