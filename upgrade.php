@@ -7,7 +7,7 @@ namespace MultipleHeaderImages;
 class Upgrade{
 
     var $user_version;
-    var $plugin_version = 1.5;
+    var $plugin_version = 0.1;
 
     public function __construct(){
         //delete_option('wm_multiple_headers_ver');
@@ -31,7 +31,7 @@ class Upgrade{
                 }
             }
 
-            //update_option('wm_multiple_headers_ver', $this->user_version); // update user version
+            update_option('wm_multiple_headers_ver', $this->user_version); // update user version
         }
 
     } // END: construct
