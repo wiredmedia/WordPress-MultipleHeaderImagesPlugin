@@ -10,7 +10,7 @@ class Upgrade{
     var $plugin_version = 1.5;
 
     public function __construct(){
-        delete_option('wm_multiple_headers_ver');
+        //delete_option('wm_multiple_headers_ver');
 
         $this->user_version = get_option('wm_multiple_headers_ver');
 
