@@ -2,7 +2,7 @@
 
 namespace MultipleHeaderImages;
 
-class Admin {
+class Admin extends Base{
   public $page_title = 'Custom Multiple Header Images';
   public $menu_title = 'Headers';
 
@@ -154,13 +154,13 @@ class Admin {
 
   /* load the styles */
   public function the_css() {
-    wp_register_style('multiple-header-images', plugins_url('css/style.css', __FILE__));
+    wp_register_style('multiple-header-images', plugins_url('css/style.css', $this->plugin_file()));
     wp_enqueue_style('multiple-header-images');
   }
 
   /* load js in footer */
   public function the_javascript() {
-    wp_register_script('multiple-header-images', plugins_url('js/main.js', __FILE__), array('jquery'), '', true);
+    wp_register_script('multiple-header-images', plugins_url('js/main.js', $this->plugin_file()), array('jquery'), '', true);
     wp_enqueue_script('multiple-header-images');
   }
 }
