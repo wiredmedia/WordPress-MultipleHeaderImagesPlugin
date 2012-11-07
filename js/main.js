@@ -9,6 +9,11 @@ var multipleHeaderImages = function() {
 
   var init = function() {
     el.container = jQuery('#multiple-header-images');
+
+    if(el.container.length < 1){
+      return;
+    }
+
     el.available = jQuery('#multiple-header-images-available');
     el.selected = jQuery('#multiple-header-images-selected');
     el.savebtn = jQuery('#mhi-save-images');
