@@ -83,7 +83,7 @@ class Admin extends Base{
   }
 
   /* ajax response for header images */
-  public function get($data) {
+  public static function get($data) {
     global $wpdb;
 
     $available_imgs = get_uploaded_header_images();
@@ -142,7 +142,7 @@ class Admin extends Base{
     }
   }
 
-  public function ajax_get($data) {
+  public static function ajax_get($data) {
     echo json_encode(self::get($data));
     exit;
   }
