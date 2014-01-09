@@ -48,7 +48,7 @@ class Plugin extends Base {
 	 *
 	 * @param string $post_id Optional. Post ID.
 	 */
-  public function get_header_images($post_id = null, $size = null){
+  public static function get_header_images($post_id = null, $size = null){
     if (is_404()) {
       $images = self::get_default_header_images();
     } else {
@@ -115,7 +115,7 @@ class Plugin extends Base {
 	 *
 	 * @param string $post_id. Post ID.
 	 */
-  private function get_header_images_post_meta($post_id) {
+  private static function get_header_images_post_meta($post_id) {
     return json_decode(get_post_meta($post_id, '_header_images', true));
   }
 }
