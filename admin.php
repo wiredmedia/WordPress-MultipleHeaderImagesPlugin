@@ -100,7 +100,11 @@ class Admin extends Base{
     if (is_array($available_imgs)) {
       foreach( $available_imgs as $header => $attrs ) {
         // strip absolute url
-        $attrs['url'] = str_replace(get_bloginfo('url'), '', $attrs['url']);
+        $img_url = parse_url($attrs['url']);
+
+        if (isset($img_url['path'])) {
+          $attrs['url'] = $img_url['path'];
+        }
 
         if (!is_array($selected_imgs) || !in_array($attrs['url'], $selected_imgs)) {
           // not in selected images
