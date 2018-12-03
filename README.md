@@ -15,3 +15,8 @@ Add header_images() to your template (header.php?) to output a simple unordered 
 ## Disclaimer
 
 This plugin is far from completion, use at your own risk, it's pretty basic, pull requests encouraged.
+
+## Authors
+
+Wired Media - https://www.wiredmedia.co.uk
+
